@@ -4,7 +4,8 @@ import LandingView from "../views/LandingView.vue";
 import BasicLayout from "../layouts/BasicLayout.vue";
 import RegisterView from "../views/RegisterView.vue";
 import LoginView from "../views/LoginView.vue";
-
+import HomeView from "../views/HomeView.vue";
+import FridgeCreationView from "../views/FridgeCreationView.vue";
 const routes = [
   {
     path: "/",
@@ -22,6 +23,18 @@ const routes = [
     path: "/auth/login",
     name: "LoginView",
     component: LoginView,
+    meta: { layout: BasicLayout },
+  },
+  {
+    path: "/home",
+    name: "HomeView",
+    component: HomeView,
+    meta: { layout: BasicLayout },
+  },
+  {
+    path: "/createFridge",
+    name: "FridgeCreationView",
+    component: FridgeCreationView,
     meta: { layout: BasicLayout },
   },
 ];

@@ -8,8 +8,10 @@
         <q-btn flat label="My Smart Fridge" />
         <q-space />
         <q-tabs v-model="tab" shrink>
-          <q-tab name="tab1" label="Register" />
-          <q-tab name="tab2" label="Sign In" />
+          <q-tab v-if="userId === null" @click="goToRegister" name="tab1" label="Register" />
+          <q-tab v-if="userId === null" @click="goToLogin" name="tab2" label="Sign In" />
+          <q-tab v-if="userId !== null" @click="goToCreateFridgeForm" name="tab3" label="Create New Fridge" />
+          <q-tab v-if="userId !== null" name="tab4" label="Log out" />
         </q-tabs>
       </q-toolbar>
     </div>
@@ -23,9 +25,22 @@
 import { ref } from "vue";
 
 export default {
+  methods: {
+    goToRegister: function () {
+      this.$router.push("/auth/register");
+    },
+    goToLogin: function () {
+      this.$router.push("/auth/login");
+    },
+    goToCreateFridgeForm: function () {
+      this.$router.push("/createFridge")
+    }
+  },
   setup() {
     return {
       tab: ref(""),
+      userId: localStorage.getItem("userId"),
+      userToken: localStorage.getItem("userToken"),
     };
   },
   data() {
@@ -36,6 +51,7 @@ export default {
       ],
     };
   },
+
   components: {},
 };
 </script>

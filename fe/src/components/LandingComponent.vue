@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex-center">
+  <q-page class="landingContainer flex-center">
     <div class="q-pa-md">
       <div class="row">
         <div class="landingLeft col">
@@ -9,7 +9,7 @@
             Fridge
           </h1>
           <div class="landingLeftSection">
-            <span class="shortDescription">Designed for organizing you fridge as you wish. </span>
+            <span class="shortDescription">Designed for organizing your fridge as you wish. </span>
             <q-btn @click="goToRegister" class="actionBtn" style="width: 30%" text-color="white" label="Create Fridge" />
           </div>
         </div>
@@ -35,6 +35,10 @@ export default {
 </script>
 
 <style>
+
+.landingContainer {
+}
+
 .topHeading {
   font-family: "Permanent Marker", cursive;
   color: #000000c2;

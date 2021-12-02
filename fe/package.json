@@ -13,6 +13,8 @@
     "cogo-toast": "^4.2.3",
     "core-js": "^3.6.5",
     "dotenv": "^10.0.0",
+    "primeicons": "^5.0.0",
+    "primevue": "^3.9.1",
     "quasar": "^2.0.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.12"

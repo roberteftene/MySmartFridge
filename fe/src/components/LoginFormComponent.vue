@@ -28,7 +28,7 @@ import cogoToast from "cogo-toast";
 import { regex_email } from "../utils/validations";
 import axios from "axios";
 export default {
-  name: "RegisterFormComponent",
+  name: "LoginFormComponent",
   setup() {
     return {
       isPwd: ref(true),

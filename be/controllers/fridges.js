@@ -38,6 +38,7 @@ const createFridge = async (req, res) => {
   try {
     const userId = req.params.userId;
     let fridgeData = { ...req.body };
+    fridgeData.creationDate = new Date().toString()
     fridgeData.userId = userId;
     await db.collection("fridges").add(fridgeData);
     res.status(201).json({
