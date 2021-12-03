@@ -1,6 +1,6 @@
 <template>
   <div class="homeContainer">
-    <DataView v-if="fridges.length > 0" :value="fridges" :layout="layout">
+    <DataView class="mainView" v-if="fridges.length > 0" :value="fridges" :layout="layout">
       <template #grid="slotProps">
         <div class="p-col-12" style="display: flex; justify-content: center">
           <Card class="fridgeCard" key="slotProps.data.id">
@@ -10,26 +10,33 @@
               </div>
             </template>
             <template #content>
-              <div class="cardBody">
-                <ul style="padding: 0% 1% 0% 1%; display: flex; flex-direction:column; align-items: center ">
-                  <li class="itemsListContainer" v-for="item in slotProps.data.items" :key="item.id">
-                    <div class="listItemHeader">
-                      <div class="itemName">{{ item.itemName }} {{ item.itemQuantity }}</div>
-                      <div class="itemPrice">{{ item.itemPrice }} RON</div>
+              <DataView :value="slotProps.data.items" :layout="layout" :paginator="true" :rows="4">
+                <template #header>
+                  <div class="p-grid p-nogutter">
+                    <div class="p-col-6" style="text-align=left">
+                      <Dropdown placeholder="Sort by price" />
+                    </div>
+                  </div>
+                </template>
+                <template class="fridgeItemsContainer" #grid="item">
+                  <div class="card-section">
+                    <div class="p-col-12 p-md-4 listItemHeader">
+                      <div class="itemName">{{ item.data.itemName }} {{ item.data.itemQuantity }}</div>
+                      <div class="itemPrice">{{ item.data.itemPrice }} RON</div>
                     </div>
                     <div class="listItemSubheader">
-                      <div class="itemPeriod">{{ item.buyDate }} / {{ item.expirationDate }}</div>
+                      <div class="itemPeriod">{{ item.data.buyDate }} / {{ item.data.expirationDate }}</div>
                     </div>
                     <div class="itemDescription">
-                      {{ item.itemDescription }}
+                      {{ item.data.itemDescription }}
                     </div>
                     <div class="itemActions">
                       <Button icon="pi pi-pencil" label="" class="btnItemAction" style="padding: 2%" @click="openEditModal(item)" />
                       <Button icon="pi pi-file-excel" label="" class="btnItemAction" style="padding: 2%" @click="removeItem(item)" />
                     </div>
-                  </li>
-                </ul>
-              </div>
+                  </div>
+                </template>
+              </DataView>
             </template>
             <template #footer>
               <div class="addBtnContainer">
@@ -70,6 +77,7 @@ import Card from "primevue/card";
 import Button from "primevue/button";
 import Dialog from "primevue/dialog";
 import cogoToast from "cogo-toast";
+import Dropdown from "primevue/dropdown";
 
 export default {
   name: "HomeView",
@@ -78,6 +86,7 @@ export default {
     Card,
     Button,
     Dialog,
+    Dropdown,
   },
   data() {
     return {
@@ -221,7 +230,7 @@ export default {
 
 <style>
 .p-dataview-content {
-  background-color: #3773b8 !important;
+  /* background-color: #3773b8 !important; */
 }
 .homeContainer {
   width: 100%;
@@ -242,8 +251,6 @@ export default {
   letter-spacing: 1px;
   font-size: 18px;
 }
-.cardBody {
-}
 
 .addBtnContainer {
   padding: 3%;
@@ -258,9 +265,10 @@ export default {
 }
 
 .fridgeCard {
-  width: 70%;
+  width: 90%;
   background-color: white;
   margin-top: 3%;
+  border-radius: 15px !important;
 }
 
 .addBtnContainer :hover {
@@ -284,7 +292,8 @@ export default {
   background-color: #1b4c85;
   padding: 2%;
   color: #fff;
-  width: 45%;
+  min-width: 30%;
+  border-radius: 10px;
 }
 
 .listItemHeader {
@@ -323,5 +332,30 @@ export default {
 
 .btnItemAction .pi {
   font-size: 12px;
+}
+
+.p-dropdown {
+  width: 14rem;
+  font-weight: normal;
+}
+
+.card-section {
+  width: 40%;
+  margin: 20px;
+  background-color: #1b4c85;
+  padding: 2%;
+  color: #fff;
+}
+
+.p-dataview .p-dataview-content {
+  background-color: #3773b8 !important;
+}
+
+.p-card-content .p-dataview {
+  background-color: #fff;
+}
+
+.p-grid .grid-nogutter {
+  background-color: #fff !important;
 }
 </style>
