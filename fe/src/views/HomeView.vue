@@ -1,8 +1,8 @@
 <template>
   <div class="homeContainer">
-    <DataView class="mainView" v-if="fridges.length > 0" :value="fridges" :layout="layout">
-      <template #grid="slotProps">
-        <div class="p-col-12" style="display: flex; justify-content: center">
+    <DataView v-if="fridges.length > 0" :value="fridges" :layout="layoutMain" :paginator="true" :rows="1">
+      <template #list="slotProps">
+        <div class="p-col-12">
           <Card class="fridgeCard" key="slotProps.data.id">
             <template #title>
               <div class="cardTitle">
@@ -10,17 +10,33 @@
               </div>
             </template>
             <template #content>
-              <DataView :value="slotProps.data.items" :layout="layout" :paginator="true" :rows="4">
+              <DataView
+                :value="slotProps.data.items"
+                :layout="layout"
+                :paginator="true"
+                :sortOrder="sortOrder"
+                :sortField="sortField"
+                :rows="6"
+              >
                 <template #header>
                   <div class="p-grid p-nogutter">
-                    <div class="p-col-6" style="text-align=left">
-                      <Dropdown placeholder="Sort by price" />
+                    <div class="p-col-6" style="text-align: left">
+                      <Dropdown
+                        v-model="sortKey"
+                        :options="sortOptions"
+                        optionLabel="label"
+                        placeholder="Sort By Price"
+                        @change="onSortChange($event)"
+                      />
+                    </div>
+                    <div class="p-col-6" style="text-align: right">
+                      <DataViewLayoutOptions v-model="layout" />
                     </div>
                   </div>
                 </template>
-                <template class="fridgeItemsContainer" #grid="item">
+                <template #grid="item">
                   <div class="card-section">
-                    <div class="p-col-12 p-md-4 listItemHeader">
+                    <div class="p-col-12 p-md-6 listItemHeader">
                       <div class="itemName">{{ item.data.itemName }} {{ item.data.itemQuantity }}</div>
                       <div class="itemPrice">{{ item.data.itemPrice }} RON</div>
                     </div>
@@ -31,8 +47,8 @@
                       {{ item.data.itemDescription }}
                     </div>
                     <div class="itemActions">
-                      <Button icon="pi pi-pencil" label="" class="btnItemAction" style="padding: 2%" @click="openEditModal(item)" />
-                      <Button icon="pi pi-file-excel" label="" class="btnItemAction" style="padding: 2%" @click="removeItem(item)" />
+                      <Button icon="pi pi-pencil" label="" class="btnItemAction" style="padding: 2%" @click="openEditModal(item.data)" />
+                      <Button icon="pi pi-file-excel" label="" class="btnItemAction" style="padding: 2%" @click="removeItem(item.data)" />
                     </div>
                   </div>
                 </template>
@@ -94,8 +110,16 @@ export default {
       userToken: localStorage.getItem("userToken"),
       fridges: [],
       layout: "grid",
+      layoutMain: "list",
       displayModalAddItem: false,
       activeFridge: "",
+      sortKey: null,
+      sortOrder: null,
+      sortField: null,
+      sortOptions: [
+        { label: "Price High to Low", value: "!itemPrice" },
+        { label: "Price Low to High", value: "itemPrice" },
+      ],
       newItemData: {
         itemName: "",
         itemQuantity: "",
@@ -183,6 +207,20 @@ export default {
           cogoToast.error("Something went wrong!");
         });
     },
+    onSortChange: function (event) {
+      console.log(event)
+      const value = event.value.value;
+      const sortValue = event.value;
+      if (value.indexOf("!") === 0) {
+        this.sortOrder = -1;
+        this.sortField = value.substring(1, value.length);
+        this.sortKey = sortValue;
+      } else {
+        this.sortOrder = 1;
+        this.sortField = value;
+        this.sortKey = sortValue;
+      }
+    },
     addItemHandler: function () {
       if (this.userId === null || this.userToken === null) {
         cogoToast.error("Session expired! Pleas log in again!");
@@ -229,16 +267,13 @@ export default {
 </script>
 
 <style>
-.p-dataview-content {
-  /* background-color: #3773b8 !important; */
-}
 .homeContainer {
   width: 100%;
-  min-height: 100vh;
   background-color: #3773b8;
   padding: 2%;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
 }
 
 .cardTitle {
@@ -250,6 +285,8 @@ export default {
   text-transform: uppercase;
   letter-spacing: 1px;
   font-size: 18px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
 }
 
 .addBtnContainer {
@@ -265,10 +302,7 @@ export default {
 }
 
 .fridgeCard {
-  width: 90%;
-  background-color: white;
-  margin-top: 3%;
-  border-radius: 15px !important;
+  border-radius: 30px !important;
 }
 
 .addBtnContainer :hover {
@@ -292,7 +326,6 @@ export default {
   background-color: #1b4c85;
   padding: 2%;
   color: #fff;
-  min-width: 30%;
   border-radius: 10px;
 }
 
@@ -340,11 +373,19 @@ export default {
 }
 
 .card-section {
-  width: 40%;
+  width: 25%;
   margin: 20px;
   background-color: #1b4c85;
   padding: 2%;
   color: #fff;
+  height: 40%;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+  transition: all .2s ease-out;
+}
+
+.card-section:hover {
+  transform: scale(1.1);
 }
 
 .p-dataview .p-dataview-content {
@@ -357,5 +398,17 @@ export default {
 
 .p-grid .grid-nogutter {
   background-color: #fff !important;
+  justify-content: center;
+  min-width: 100vh;
+  min-height: 80vh;
+}
+
+.mainView {
+  display: flex;
+}
+
+.p-paginator {
+  margin-top: 50px;
+  border-radius: 15px !important;
 }
 </style>
